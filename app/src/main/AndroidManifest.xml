@@ -12,7 +12,7 @@
         android:theme="@style/Theme.FABLABCORP"
         tools:targetApi="31">
         <activity
-            android:name=".TestActivity"
+            android:name=".AdministratorActivity"
             android:exported="false" />
         <activity
             android:name=".AccueilActivity"
@@ -24,7 +24,7 @@
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".MemberActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
