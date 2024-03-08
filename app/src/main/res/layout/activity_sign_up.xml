@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/Background"
+    android:background="@drawable/background"
     tools:context=".SignUpActivity">
 
     <ScrollView
@@ -32,28 +32,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="100dp"
                 android:layout_marginEnd="12dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/btn_background"
                 android:ems="10"
                 android:hint="Username"
-                android:inputType="text"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white" />
-
-            <EditText
-                android:id="@+id/editTextPhoneNumber"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/btn_background"
-                android:ems="10"
-                android:hint="Phone Number"
                 android:inputType="text"
                 android:textAlignment="center"
                 android:textColor="@color/white"
