@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="110dp"
-                android:text="SIGN UP"
+                android:text="SIGN IN"
                 android:textColor="@color/white"
                 android:textSize="50sp"
                 android:textStyle="bold" />
