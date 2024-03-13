@@ -1,99 +1,56 @@
 package com.example.fablabcorp;
 
+import android.content.Intent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ExecutorService;
-
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText editTextEmail;
-    private EditText editTextPassword;
-    private ExecutorService executorService;
+    private EditText userEdt, passEdt;
+    private Button loginBtn;
+    private TextView signUpText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        initView();
+    }
 
-        executorService = Executors.newSingleThreadExecutor();
+    private void initView() {
+        userEdt = findViewById(R.id.editTextEmail); // ID pour le champ E-mail
+        passEdt = findViewById(R.id.editTextPassword); // ID pour le champ Password
+        loginBtn = findViewById(R.id.button2); // ID pour le bouton Log in
+        signUpText = findViewById(R.id.textView3); // ID pour le texte "Sign up"
 
-        editTextEmail = findViewById(R.id.editTextEmail);
-        editTextPassword = findViewById(R.id.editTextPassword);
-
-        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String email = editTextEmail.getText().toString();
-                final String password = editTextPassword.getText().toString();
+                String username = userEdt.getText().toString();
+                String password = passEdt.getText().toString();
 
-                // Exécuter la tâche dans un autre thread
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        final String result = performLogin(email, password);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                handleLoginResult(result);
-                            }
-                        });
-                    }
-                });
+                if (username.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(LoginActivity.this, "Please Fill your user and password", Toast.LENGTH_SHORT).show();
+                } else if (username.equals("test") && password.equals("test")) {
+                    startActivity(new Intent(LoginActivity.this, MemberActivity.class));
+                } else if (username.equals("toto") && password.equals("toto")) {
+                    startActivity(new Intent(LoginActivity.this, AdministratorActivity.class));
+                } else {
+                    Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (executorService != null && !executorService.isShutdown()) {
-            executorService.shutdown();
-        }
-    }
-
-    private String performLogin(String email, String password) {
-        try {
-            URL url = new URL("https://57d1313e-8972-40f3-82bb-3749f6d90a81.mock.pstmn.io/login?user=" + email + "&pass=" + password);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("Content-Type", "application/json");
-
-            int responseCode = conn.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                String inputLine;
-                StringBuilder response = new StringBuilder();
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-                return response.toString();
-            } else {
-                return "Échec de la requête : " + responseCode;
+        signUpText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
             }
-        } catch (Exception e) {
-            return "Exception: " + e.getMessage();
-        }
-    }
-
-    private void handleLoginResult(String result) {
-        try {
-            JSONObject response = new JSONObject(result);
-            String message = response.getString("message");
-            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            Toast.makeText(LoginActivity.this, "Erreur lors du parsing du résultat : " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+        });
     }
 }
