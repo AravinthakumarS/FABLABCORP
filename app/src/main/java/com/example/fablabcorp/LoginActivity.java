@@ -1,56 +1,122 @@
 package com.example.fablabcorp;
 
 import android.content.Intent;
-import android.view.View;
+import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
+
+import com.google.gson.Gson;
+
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+import java.io.IOException;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText userEdt, passEdt;
-    private Button loginBtn;
+    private EditText editTextEmail;
+    private EditText editTextPassword;
+    private Button loginButton;
     private TextView signUpText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        initView();
+
+        editTextEmail = findViewById(R.id.editTextEmail);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        loginButton = findViewById(R.id.button2);
+        signUpText = findViewById(R.id.textView3);
+
+        loginButton.setOnClickListener(view -> attemptLogin());
+
+        signUpText.setOnClickListener(view -> {
+            Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+            startActivity(intent);
+        });
     }
 
-    private void initView() {
-        userEdt = findViewById(R.id.editTextEmail); // ID pour le champ E-mail
-        passEdt = findViewById(R.id.editTextPassword); // ID pour le champ Password
-        loginBtn = findViewById(R.id.button2); // ID pour le bouton Log in
-        signUpText = findViewById(R.id.textView3); // ID pour le texte "Sign up"
+    private void attemptLogin() {
+        String email = editTextEmail.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
 
-        loginBtn.setOnClickListener(new View.OnClickListener() {
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(LoginActivity.this, "Email or password cannot be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        performLoginRequest(email, password);
+    }
+
+    private void performLoginRequest(String email, String password) {
+        OkHttpClient client = new OkHttpClient();
+
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://46b15cfb-cb64-459e-b200-e0252f8636ca.mock.pstmn.io/connexion").newBuilder();
+        urlBuilder.addQueryParameter("email", email);
+        urlBuilder.addQueryParameter("mdp", password);
+        String url = urlBuilder.build().toString();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
-            public void onClick(View v) {
-                String username = userEdt.getText().toString();
-                String password = passEdt.getText().toString();
+            public void onFailure(okhttp3.Call call, IOException e) {
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            }
 
-                if (username.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Please Fill your user and password", Toast.LENGTH_SHORT).show();
-                } else if (username.equals("test") && password.equals("test")) {
-                    startActivity(new Intent(LoginActivity.this, MemberActivity.class));
-                } else if (username.equals("toto") && password.equals("toto")) {
-                    startActivity(new Intent(LoginActivity.this, AdministratorActivity.class));
+            @Override
+            public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseData = response.body().string();
+                    Gson gson = new Gson();
+                    Utilisateur utilisateur = gson.fromJson(responseData, Utilisateur.class);
+
+                    runOnUiThread(() -> {
+                        Intent intent;
+                        switch (utilisateur.getRole()) {
+                            case "Responsable Agent":
+                                intent = new Intent(LoginActivity.this, AdministratorActivity.class);
+                                break;
+                            case "Agent":
+                                intent = new Intent(LoginActivity.this, MemberActivity.class);
+                                break;
+                            default:
+                                Toast.makeText(LoginActivity.this, "Role non reconnu", Toast.LENGTH_SHORT).show();
+                                return;
+                        }
+                        startActivity(intent);
+                        Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                    });
                 } else {
-                    Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login failed with code: " + response.code(), Toast.LENGTH_SHORT).show());
                 }
-            }
-        });
-
-        signUpText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+                response.close(); // Important to close the response after use
             }
         });
     }
+
+    private class Utilisateur {
+        private int id;
+        private String email;
+        private String mdp; // mot de passe
+        private String prenom;
+        private String nom;
+        private String etablissement;
+        private String role;
+
+        public String getRole() {
+            return role;
+        }
+
+        // ... Ajoutez le reste des getters et setters si nécessaire
+    }
+
 }

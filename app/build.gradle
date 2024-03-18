@@ -42,6 +42,9 @@ dependencies {
 
     implementation 'com.squareup.okhttp3:okhttp:4.9.1' // Assurez-vous de vérifier la dernière version disponible
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1' // Interceptor pour le logging
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.android.volley:volley:1.2.1'
+    implementation 'com.google.code.gson:gson:2.8.6'
 
 
 }
