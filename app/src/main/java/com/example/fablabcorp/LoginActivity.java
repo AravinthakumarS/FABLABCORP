@@ -48,12 +48,11 @@ public class LoginActivity extends AppCompatActivity {
         String password = editTextPassword.getText().toString().trim();
 
         if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(LoginActivity.this, "Email or password cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Email ou password manquant", Toast.LENGTH_SHORT).show();
             return;
         }
         performLoginRequest(email, password);
     }
-
     private void performLoginRequest(String email, String password) {
         OkHttpClient client = new OkHttpClient();
 
@@ -69,54 +68,61 @@ public class LoginActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
-                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Connexion échoué : " + e.getMessage(), Toast.LENGTH_SHORT).show());
             }
 
             @Override
             public void onResponse(okhttp3.Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String responseData = response.body().string();
-                    Gson gson = new Gson();
-                    Utilisateur utilisateur = gson.fromJson(responseData, Utilisateur.class);
+                final String responseData = response.body().string();
 
-                    runOnUiThread(() -> {
-                        Intent intent;
-                        switch (utilisateur.getRole()) {
-                            case "Responsable Agent":
-                                intent = new Intent(LoginActivity.this, AdministratorActivity.class);
-                                break;
-                            case "Agent":
-                                intent = new Intent(LoginActivity.this, MemberActivity.class);
-                                break;
-                            default:
-                                Toast.makeText(LoginActivity.this, "Role non reconnu", Toast.LENGTH_SHORT).show();
-                                return;
+                runOnUiThread(() -> {
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(LoginActivity.this, "Login failed with code: " + response.code(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Gson gson = new Gson();
+                        Utilisateur utilisateur = gson.fromJson(responseData, Utilisateur.class);
+
+                        if (utilisateur != null && utilisateur.getEmail().equals(email) && utilisateur.getMdp().equals(password)) {
+                            Intent intent;
+                            switch (utilisateur.getRole()) {
+                                case "Responsable Agent":
+                                    intent = new Intent(LoginActivity.this, AdministratorActivity.class);
+                                    break;
+                                case "Agent":
+                                    intent = new Intent(LoginActivity.this, MemberActivity.class);
+                                    break;
+                                default:
+                                    Toast.makeText(LoginActivity.this, "Role Non Reconnu", Toast.LENGTH_SHORT).show();
+                                    return;
+                            }
+                            startActivity(intent);
+                            Toast.makeText(LoginActivity.this, "Connexion Réussie", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Email ou Mot De Passe Incorrect", Toast.LENGTH_SHORT).show();
                         }
-                        startActivity(intent);
-                        Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                    });
-                } else {
-                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Login failed with code: " + response.code(), Toast.LENGTH_SHORT).show());
-                }
-                response.close(); // Important to close the response after use
+                    }
+                });
+
+                response.close();
             }
         });
     }
 
     private class Utilisateur {
-        private int id;
         private String email;
-        private String mdp; // mot de passe
-        private String prenom;
-        private String nom;
-        private String etablissement;
+        private String mdp;
         private String role;
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getMdp() {
+            return mdp;
+        }
 
         public String getRole() {
             return role;
         }
-
-        // ... Ajoutez le reste des getters et setters si nécessaire
     }
-
 }
