@@ -1,5 +1,6 @@
 package com.example.fablabcorp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.*;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -20,7 +22,6 @@ public class SignUpActivity extends AppCompatActivity {
     private Button signUpButton;
     private TextView loginLink;
 
-    // Remplacez ceci par votre URL de serveur mock fournie par Postman.
     private final String url = "https://46b15cfb-cbb4-459e-b200-e0252f8636ca.mock.pstmn.io/createUser";
 
     @Override
@@ -28,7 +29,6 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        // Initialiser les composants de la vue
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
@@ -36,7 +36,6 @@ public class SignUpActivity extends AppCompatActivity {
         signUpButton = findViewById(R.id.button2);
         loginLink = findViewById(R.id.textView2);
 
-        // Définir l'écouteur du bouton d'inscription
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,13 +43,12 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        // Ecouteur pour le lien de connexion
         loginLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Remplacez ceci par l'intention de démarrer votre activité de connexion
-                // Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
-                // startActivity(intent);
+                // Intention de démarrer LoginActivity
+                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -81,19 +79,17 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        // Créer le JSON pour la requête POST
         JSONObject json = new JSONObject();
         try {
             json.put("email", email);
             json.put("password", password);
             json.put("name", username);
-            json.put("role", "Agent"); // Remplacez par la logique de votre rôle si nécessaire
+            json.put("role", "Agent"); // Remplacez par votre logique de rôle
         } catch (JSONException e) {
             showToast("Erreur lors de la création de la requête JSON.");
             return;
         }
 
-        // Créer et exécuter la requête POST
         postRequest(url, json);
     }
 
@@ -117,6 +113,9 @@ public class SignUpActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     showToast("Inscription réussie !");
+                    Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish(); // Ferme SignUpActivity
                 } else {
                     showToast("Inscription échouée: " + response.message());
                 }
@@ -134,6 +133,6 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private boolean isPasswordValid(String password) {
-        return password.length() > 6;
+        return password.length() > 3;
     }
 }
