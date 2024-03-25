@@ -22,7 +22,7 @@ public class SignUpActivity extends AppCompatActivity {
     private Button signUpButton;
     private TextView loginLink;
 
-    private final String url = "https://46b15cfb-cbb4-459e-b200-e0252f8636ca.mock.pstmn.io/createUser";
+    private final String url = "https://c2a10eed-4b23-4f87-b01a-2596e8315607.mock.pstmn.io/createUser";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

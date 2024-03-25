@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F6F6F6"
+    tools:context=".AttendenceTimeActivity">
+
+    <!-- En-tête indiquant la présence des membres -->
+    <TextView
+        android:id="@+id/tvHeaderPresenceMembres"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Présence des membres actuelle"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:background="#FFF"
+        android:elevation="4dp"
+        android:padding="16dp"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- RecyclerView pour afficher les membres et leurs temps de présence -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvListeMembresPresence"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#FFF"
+        android:elevation="4dp"
+        app:layout_constraintTop_toBottomOf="@id/tvHeaderPresenceMembres"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:clipToPadding="false"
+        android:padding="8dp"
+        android:scrollbars="vertical"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editTextPassword;
     private Button loginButton;
     private TextView signUpText;
+    private TextView forgotPasswordText; // Ajout pour le texte "Mot de passe oublié ?"
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +35,17 @@ public class LoginActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.editTextPassword);
         loginButton = findViewById(R.id.button2);
         signUpText = findViewById(R.id.textView3);
+        forgotPasswordText = findViewById(R.id.textView4); // Initialisation du TextView pour mot de passe oublié
 
         loginButton.setOnClickListener(view -> attemptLogin());
 
         signUpText.setOnClickListener(view -> {
             Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+            startActivity(intent);
+        });
+
+        forgotPasswordText.setOnClickListener(view -> {
+            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
             startActivity(intent);
         });
     }
@@ -51,12 +58,14 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(LoginActivity.this, "Email ou password manquant", Toast.LENGTH_SHORT).show();
             return;
         }
+
         performLoginRequest(email, password);
     }
+
     private void performLoginRequest(String email, String password) {
         OkHttpClient client = new OkHttpClient();
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://46b15cfb-cb64-459e-b200-e0252f8636ca.mock.pstmn.io/connexion").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://c2a10eed-4b23-4f87-b01a-2596e8315607.mock.pstmn.io/connexion").newBuilder();
         urlBuilder.addQueryParameter("email", email);
         urlBuilder.addQueryParameter("mdp", password);
         String url = urlBuilder.build().toString();
@@ -113,6 +122,7 @@ public class LoginActivity extends AppCompatActivity {
         private String mdp;
         private String role;
 
+        // Getters et éventuellement setters pour les propriétés
         public String getEmail() {
             return email;
         }
