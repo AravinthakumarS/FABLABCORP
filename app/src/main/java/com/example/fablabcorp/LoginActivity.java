@@ -65,9 +65,9 @@ public class LoginActivity extends AppCompatActivity {
     private void performLoginRequest(String email, String password) {
         OkHttpClient client = new OkHttpClient();
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://c2a10eed-4b23-4f87-b01a-2596e8315607.mock.pstmn.io/connexion").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://8f5c7810-61e7-476a-80c7-31a5dfb3ed93.mock.pstmn.io/connexion").newBuilder();
         urlBuilder.addQueryParameter("email", email);
-        urlBuilder.addQueryParameter("mdp", password);
+        urlBuilder.addQueryParameter("password", password);
         String url = urlBuilder.build().toString();
 
         Request request = new Request.Builder()
@@ -94,10 +94,10 @@ public class LoginActivity extends AppCompatActivity {
                         if (utilisateur != null && utilisateur.getEmail().equals(email) && utilisateur.getMdp().equals(password)) {
                             Intent intent;
                             switch (utilisateur.getRole()) {
-                                case "Responsable Agent":
+                                case "Administrator":
                                     intent = new Intent(LoginActivity.this, AdministratorActivity.class);
                                     break;
-                                case "Agent":
+                                case "Member":
                                     intent = new Intent(LoginActivity.this, MemberActivity.class);
                                     break;
                                 default:
@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private class Utilisateur {
         private String email;
-        private String mdp;
+        private String password;
         private String role;
 
         // Getters et éventuellement setters pour les propriétés
@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         public String getMdp() {
-            return mdp;
+            return password;
         }
 
         public String getRole() {

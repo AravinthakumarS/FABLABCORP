@@ -22,7 +22,7 @@ public class SignUpActivity extends AppCompatActivity {
     private Button signUpButton;
     private TextView loginLink;
 
-    private final String url = "https://c2a10eed-4b23-4f87-b01a-2596e8315607.mock.pstmn.io/createUser";
+    private final String url = "https://8f5c7810-61e7-476a-80c7-31a5dfb3ed93.mock.pstmn.io/inscription";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +83,8 @@ public class SignUpActivity extends AppCompatActivity {
         try {
             json.put("email", email);
             json.put("password", password);
-            json.put("name", username);
-            json.put("role", "Agent"); // Remplacez par votre logique de rôle
+            json.put("user", username);
+            json.put("role", "Member"); // Remplacez par votre logique de rôle
         } catch (JSONException e) {
             showToast("Erreur lors de la création de la requête JSON.");
             return;
