@@ -57,7 +57,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         RequestBody body = RequestBody.create(mediaType, "{\"email\":\"" + email + "\",\"password\":\"" + password + "\"}");
 
         Request request = new Request.Builder()
-                .url("https://5d71313e-8972-40f3-82bb-374f96d9a8a1.mock.pstmn.io")
+                .url("https://8f5c7810-61e7-476a-80c7-31a5dfb3ed93.mock.pstmn.io/Forgotmdp")
                 .put(body)
                 .build();
 

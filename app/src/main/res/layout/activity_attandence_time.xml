@@ -23,7 +23,7 @@
         android:layout_centerInParent="true"
         android:textSize="24sp"
         android:textColor="@color/white"
-        android:text="Présent Depuis : 0 min" />
+        android:text="Temps de présence total : 0 min" />
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button12"
         style="@android:style/Widget.Button"

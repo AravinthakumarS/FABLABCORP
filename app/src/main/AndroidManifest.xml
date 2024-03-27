@@ -20,7 +20,7 @@
             android:name=".LockActivity"
             android:exported="false" />
         <activity
-            android:name=".AttendenceTimeActivity"
+            android:name=".AttendanceTimeActivity"
             android:exported="false" />
         <activity
             android:name=".ForgotPasswordActivity"

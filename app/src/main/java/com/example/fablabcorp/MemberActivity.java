@@ -33,7 +33,7 @@ public class MemberActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Créez l'intention de démarrer AttendanceTimeActivity
-                Intent attendanceTimeIntent = new Intent(MemberActivity.this, AttendenceTimeActivity.class);
+                Intent attendanceTimeIntent = new Intent(MemberActivity.this, AttendanceTimeActivity.class);
                 startActivity(attendanceTimeIntent);
             }
         });
